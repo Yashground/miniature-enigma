@@ -9,7 +9,7 @@ phases:
       - echo Cleaning NPM cache...
       - npm cache clean --force
       - echo Installing dependencies...
-      - npm ci
+      - npm ci --legacy-peer-deps
       - npm list next
   build:
     commands:
@@ -18,7 +18,6 @@ phases:
       - ls -la node_modules/.bin
       - npm run build
       - echo Build completed, exporting  directories...
-      - npm run export
       - echo Build and export completed, checking directories...
       - ls -la out
 
