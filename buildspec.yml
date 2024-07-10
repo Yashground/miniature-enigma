@@ -5,6 +5,7 @@ phases:
     commands:
       - echo Installing dependencies...
       - npm install
+      - npm list next
   build:
     commands:
       - echo Building the project...
@@ -17,7 +18,8 @@ phases:
   post_build:
     commands:
       - echo Syncing with S3...
-      - aws s3 sync ./out s3://nextjsapp-hostingbucket --delete
+      - if [ -d "out" ]; then aws s3 sync ./out s3://your-s3-bucket-name --delete; else echo "Build failed, not syncing to S3"; fi
+ 
 artifacts:
   files:
     - '**/*'
