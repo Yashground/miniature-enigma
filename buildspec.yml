@@ -3,8 +3,10 @@ version: 0.2
 phases:
   install:
     commands:
+      - echo Cleaning NPM cache...
+      - npm cache clean --force
       - echo Installing dependencies...
-      - npm install
+      - npm ci
       - npm list next
   build:
     commands:
