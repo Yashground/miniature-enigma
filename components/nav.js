@@ -11,14 +11,14 @@ const Nav = () => (
     <ul>
       <li>
         <Link prefetch href="/">
-          <a>Home</a>
+          Home
         </Link>
       </li>
       <ul>
         {links.map(({ key, href, label }) => (
           <li key={key}>
             <Link href={href}>
-              <a>{label}</a>
+              {label}
             </Link>
           </li>
         ))}
