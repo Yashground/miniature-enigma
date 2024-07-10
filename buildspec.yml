@@ -3,6 +3,10 @@ version: 0.2
 phases:
   install:
     commands:
+      - echo Installing Node.js 16...
+      - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+      - apt-get install -y nodejs
+      - nvm use 16
       - echo Cleaning NPM cache...
       - npm cache clean --force
       - echo Installing dependencies...
