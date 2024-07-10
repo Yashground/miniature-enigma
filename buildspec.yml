@@ -17,15 +17,11 @@ phases:
       - export NODE_OPTIONS=--openssl-legacy-provider
       - ls -la node_modules/.bin
       - npm run build
-      - echo Build completed, checking directories...
-      - ls -la .next
-      - ls -la .next/server/pages/*
-      - echo Preparing static files...
-      - mkdir -p out
-      - if [ -d ".next/static" ]; then cp -r .next/static out/static; fi
-      - if [ -f ".next/BUILD_ID" ]; then cp .next/BUILD_ID out/BUILD_ID; fi
-      - if [ -d ".next/server" ]; then cp -r .next/server/* out/; fi
-   
+      - echo Build completed, exporting  directories...
+      - npm run export
+      - echo Build and export completed, checking directories...
+      - ls -la out
+
   post_build:
     commands:
       - echo Syncing with S3...
