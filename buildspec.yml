@@ -20,7 +20,6 @@ phases:
       - echo Build completed, checking directories...
       - ls -la .next
       - ls -la .next/server
-      - ls -la .next/server/pages
       - echo Preparing static files...
       - mkdir -p out
       - if [ -d ".next/static" ]; then cp -r .next/static out/static; fi
