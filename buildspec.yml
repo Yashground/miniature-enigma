@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - npm install
+  build:
+    commands:
+      - echo Building the project...
+      - npm run build
+      - echo Preparing static files...
+      - mkdir -p out
+      - cp -r .next/static out/static
+      - cp .next/BUILD_ID out/BUILD_ID
+      - cp .next/server/pages/* out/
+  post_build:
+    commands:
+      - echo Syncing with S3...
+      - aws s3 sync ./out s3://nextjsapp-hostingbucket --delete
+artifacts:
+  files:
+    - '**/*'
+  base-directory: out
