@@ -1,6 +1,7 @@
 // next.config.js
 module.exports = {
-  webpack: (config) => {
+  output: "export",
+   webpack: (config) => {
     config.resolve = {
       ...config.resolve,
       fallback: {
