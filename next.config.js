@@ -1,15 +1,16 @@
-// next.config.js
 module.exports = {
   output: "export",
-   webpack: (config) => {
-    config.resolve = {
-      ...config.resolve,
-      fallback: {
-        fs: false,
-        path: false,
-        os: false,
-      },
+    webpack: (config) => {
+    // Fixes npm packages that depend on `fs` module
+    config.node = {
+      fs: 'empty'
     };
+
+    // Remove the fallback configuration
+    if (config.resolve.fallback) {
+      delete config.resolve.fallback;
+    }
+
     return config;
   },
   exportPathMap: async function (
