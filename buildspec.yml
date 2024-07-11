@@ -16,6 +16,7 @@ phases:
       - npm run build || { echo "npm run build failed"; exit 1; }
       - echo Build and export completed, checking directories...
       - ls -la out
+      - echo directories listed
 
   post_build:
     commands:
