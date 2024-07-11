@@ -23,7 +23,7 @@ phases:
       - echo Syncing with S3...
       - if [ -d "out" ]; then aws s3 sync ./out s3://nextjsapp-hostingbucket --delete; else echo "Build failed, not syncing to S3"; fi
       - echo "Creating CloudFront invalidation..."
-      - echo "CLOUDFRONT_DISTRIBUTION_ID is: $CLOUDFRONT_DISTRIBUTION_ID"  # Debugging line to print the variable
+      - echo "CLOUDFRONT_DISTRIBUTION_ID is :$CLOUDFRONT_DISTRIBUTION_ID"  # Debugging line to print the variable
       - if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
           aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*" || { echo "CloudFront invalidation failed"; exit 1; };
         else
