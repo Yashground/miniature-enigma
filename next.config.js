@@ -1,16 +1,14 @@
 module.exports = {
   output: "export",
-    webpack: (config) => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty'
-    };
-
-    // Remove the fallback configuration
-    if (config.resolve.fallback) {
-      delete config.resolve.fallback;
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+      };
     }
-
     return config;
   },
   exportPathMap: async function (
@@ -20,6 +18,6 @@ module.exports = {
     return {
       '/': { page: '/' },
       // Add other static routes as needed
-    }
+    };
   },
 };
