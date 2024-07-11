@@ -2,22 +2,18 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      node js: 16 
     commands:
-      - echo Installing Node.js 16...
-      - curl -sL https://deb.nodesource.com/setup_16.x | bash -
-      - apt-get install -y nodejs
-      - echo Cleaning NPM cache...
-      - npm cache clean --force
       - echo Installing dependencies...
-      - npm ci --legacy-peer-deps
+      - npm ci || { echo "npm install failed"; exit 1; }
       - npm list next
   build:
     commands:
       - echo Building the project...
       - export NODE_OPTIONS=--openssl-legacy-provider
       - ls -la node_modules/.bin
-      - npm run build
-      - echo Build completed, exporting  directories...
+      - npm run build || { echo "npm run build failed"; exit 1; }
       - echo Build and export completed, checking directories...
       - ls -la out
 
@@ -25,7 +21,17 @@ phases:
     commands:
       - echo Syncing with S3...
       - if [ -d "out" ]; then aws s3 sync ./out s3://nextjsapp-hostingbucket --delete; else echo "Build failed, not syncing to S3"; fi
- 
+      - echo "Creating CloudFront invalidation..."
+      - if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+          aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*";
+        else
+          echo "CLOUDFRONT_DISTRIBUTION_ID is not set";
+          exit 1;
+        fi
+
+cache:
+  paths:
+    - /root/.npm/**/*  # Caching npm dependencies
 artifacts:
   files:
     - '**/*'
