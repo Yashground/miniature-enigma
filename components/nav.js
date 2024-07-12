@@ -18,7 +18,7 @@ const Nav = () => (
         {links.map(({ key, href, label }) => (
           <li key={key}>
             <Link href={href}>
-              {label}
+              {label}                 // removing child label
             </Link>
           </li>
         ))}
