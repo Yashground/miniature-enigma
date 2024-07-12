@@ -1,9 +1,9 @@
 // next.config.js
 module.exports = {
-  output: "export",
+  output: "export",         //as per new next js version, no need of next export in script
    webpack: (config) => {
     config.resolve = {
-      ...config.resolve,
+      ...config.resolve,     //changing per new webpack release
       fallback: {
         fs: false,
         path: false,

@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  BucketName:
+    Type: String
+    Description: The name of the S3 bucket
+  DistributionComment:
+    Type: String
+    Default: "Test CloudFront Distribution"
+  CodePipelineRoleArn:
+    Type: String
+    Description: The ARN of the CodePipeline role
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+  CloudFrontOAI:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Ref DistributionComment
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+  S3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity/${CloudFrontOAI}
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*
+          - Effect: Allow
+            Principal:
+              AWS: !Ref CodePipelineRoleArn
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+  CloudFrontDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt S3Bucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOAI}
+        Enabled: true
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
