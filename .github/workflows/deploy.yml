@@ -22,7 +22,7 @@ jobs:
 
       - name: Build and Run Docker Container
         run: |
-          docker run -d -p 80:80 Minipekka/deploy:stable
+          docker run -d -p 80:80 minipekka/deploy:stable
 
       - name: Stop Docker Container
-        run: docker stop $(docker ps -q --filter ancestor=Minipekka/deploy:stable)
+        run: docker stop $(docker ps -q --filter ancestor=minipekka/deploy:stable)
