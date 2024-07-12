@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16 alpine 
+FROM node:20-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --legacy-peer-deps
+RUN npm Install
 
 # Copy the rest of the application files
 COPY . .
@@ -18,9 +18,6 @@ RUN npm run build
 
 # Expose the port the app runs on
 EXPOSE 3000
-
-# Define the command to run the app
-#CMD ["npm", "start"]
 
 # Define the command to run the app
 CMD ["npx", "serve", "-s", "out"]
