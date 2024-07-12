@@ -17,12 +17,14 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Pull Docker Image
-        run: docker pull minipekka/deploy:stable
-
-      - name: Build and Run Docker Container
+      - name: Pull and Run Docker Container
+        if: success()
+        env:
+          VERSION: ${{ steps.deploy.outputs.version }}
         run: |
-          docker run -d -p 80:80 minipekka/deploy:stable
+          docker pull minipekka/deploy:${VERSION}
+          docker run -d -p 80:80 minipekka/deploy:${VERSION}
 
       - name: Stop Docker Container
-        run: docker stop $(docker ps -q --filter ancestor=minipekka/deploy:stable)
+        if: success()
+        run: docker stop $(docker ps -q --filter ancestor=minipekka/deploy:${{ steps.deploy.outputs.version }})
