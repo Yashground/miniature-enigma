@@ -4,6 +4,7 @@
 IMAGE_NAME="minipekka/deploy"
 LATEST_TAG="stable"
 VERSION_FILE="version.txt"
+DOCKERFILE_PATH="./Dockerfile"  # Explicitly specifying the Dockerfile path
 
 # Function to get the current version
 get_current_version() {
@@ -33,7 +34,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Build the Docker image with the latest tag
-docker build -t $IMAGE_NAME:$LATEST_TAG .
+docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME:$LATEST_TAG .
 if [ $? -ne 0 ]; then
   echo "Docker build failed"
   exit 1
