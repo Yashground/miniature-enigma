@@ -1,9 +1,9 @@
-name: Deploy Docker Image
+name: Build and Deploy Docker Image
 
 on:
   push:
     branches:
-      - test/vercel-deployment  
+      - test/vercel-deployment
 
 jobs:
   build-and-deploy:
@@ -15,7 +15,16 @@ jobs:
 
       - name: Login to Docker Hub using token
         run: |
-          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Execute Deploy Script
+        id: deploy
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        run: |
+          chmod +x deploy.sh
+          ./deploy.sh
 
       - name: Pull and Run Docker Container
         if: success()
